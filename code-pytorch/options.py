@@ -4,6 +4,26 @@ import pprint
 
 
 def load_arguments():
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument("--train",
+                           type=str,
+                           default="")
+    argparser.add_argument("--dev",
+                           type=str,
+                           default="")
+    argparser.add_argument("--test",
+                           type=str,
+                           default="")
+
+    argparser.add_argument("-bs", "--batch_size",
+                           type=int,
+                           default=16)
+
+    args = argparser.parse_args()
+    return args
+
+
+def load_arguments_tf():
     argparser = argparse.ArgumentParser(sys.argv[0])
 
     argparser.add_argument('--train',

@@ -3,31 +3,55 @@ import torch.nn as nn
 
 
 class Encoder(nn.Module):
-    def __init__(self):
+    def __init__(self, input_size, latent_dim, num_layers=1):
         super().__init__()
-        pass
+        self.encode = nn.GRU(input_size, latent_dim, num_layers=num_layers, batch_first=True)
 
     def forward(self, x):
-        pass
+        h, _ = self.encode(x)
+        z = h[:, -1, :]  # taking last state of a hidden representations
+        return z
 
 
 class Generator(nn.Module):
     """Decoder"""
-    def __init__(self):
+    def __init__(self, input_size, latent_dim, num_layers=1):
         super().__init__()
-        pass
+        self.decode = nn.GRU(input_size, latent_dim, num_layers=num_layers, batch_first=True)
 
-    def forward(self, x):
-        pass
+    def forward(self, x, z):
+        """
+        :param x: either a real sequence or soft output distribution with temperature gamma
+        :param z: latent content representation
+        :return: transferred hidden states sequence
+        """
+        hs, _ = self.decode(x, z)
+        return hs
 
 
 class Discriminator(nn.Module):
-    def __init__(self):
+    def __init__(self, max_seq_len, kernel_size, hidden_dim):
         super().__init__()
+        self.max_seq_len = max_seq_len
+        assert kernel_size % 2 == 0
+        padding = (kernel_size - 1) / 2
+        self.conv = nn.Sequential(
+            nn.Conv2d(
+                in_channels=1, out_channels=128, kernel_size=(kernel_size, hidden_dim), stride=(1, 0),
+                padding=(padding, 0)
+            ),
+            nn.ReLU()  # TODO: think about max pooling and how to do it
+        )
+        self.linear = nn.Linear(128*max_seq_len, 1)
+
+    def pad(self, x):
         pass
 
     def forward(self, x):
-        pass
+        x = self.pad(x)
+        x = self.conv(x)
+        x = self.linear(x)
+        return x
 
 
 class StyleTransferModel:

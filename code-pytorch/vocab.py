@@ -22,7 +22,7 @@ class Vocabulary(object):
                     if word in self.word2id:
                         self.embedding[self.word2id[word]] = vec
 
-        for i in range(self.size):  # TODO: why?
+        for i in range(self.size):  # TODO: why dividing by norm? (I think it doesn't really matter)
             self.embedding[i] /= LA.norm(self.embedding[i])
 
 

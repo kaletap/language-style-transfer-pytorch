@@ -30,26 +30,26 @@ class Generator(nn.Module):
 
 
 class Discriminator(nn.Module):
-    def __init__(self, max_seq_len, kernel_size, hidden_dim):
+    def __init__(self, hidden_dim, kernel_size):
         super().__init__()
-        self.max_seq_len = max_seq_len
+        self.out_channels = 128
         assert kernel_size % 2 == 0
         padding = (kernel_size - 1) / 2
         self.conv = nn.Sequential(
             nn.Conv2d(
-                in_channels=1, out_channels=128, kernel_size=(kernel_size, hidden_dim), stride=(1, 0),
+                in_channels=1, out_channels=self.out_channels, kernel_size=(kernel_size, hidden_dim), stride=(1, 0),
                 padding=(padding, 0)
             ),
-            nn.ReLU()  # TODO: think about max pooling and how to do it
+            nn.ReLU()
         )
-        self.linear = nn.Linear(128*max_seq_len, 1)
-
-    def pad(self, x):
-        pass
+        self.linear = nn.Linear(128, 1)
 
     def forward(self, x):
-        x = self.pad(x)
-        x = self.conv(x)
+        assert len(x.shape) == 3
+        batch_size, seq_len, dim = x.shape
+        x = x.view(batch_size, 1, seq_len, dim)  # batch_size x n_channels x seq_len x dim
+        x = self.conv(x)  # batch_size x out_channels x 1 x 1 (?)
+        x = torch.max(x, dim=1)[0].view(-1, self.out_channels)
         x = self.linear(x)
         return x
 

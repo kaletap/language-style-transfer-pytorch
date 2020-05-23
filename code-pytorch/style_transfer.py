@@ -1,8 +1,10 @@
+import torch
 import os
 
 from options import load_arguments
 from file_io import load_sent
 from vocab import build_vocab, Vocabulary
+from model import Encoder, Generator, Discriminator
 
 
 if __name__ == '__main__':
@@ -28,3 +30,10 @@ if __name__ == '__main__':
     if args.test:
         test0 = load_sent(args.test + '.0')
         test1 = load_sent(args.test + '.1')
+
+    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+    print("Using device", device)
+
+    encoder = Encoder(args.dim_emb, args.dim_z)
+    generator = Generator(args.dim_emb, args.dim_z)
+    discriminator = Discriminator(hidden_dim=args.dim_y)

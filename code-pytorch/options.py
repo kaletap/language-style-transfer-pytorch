@@ -30,9 +30,6 @@ def load_arguments():
                            default=100,
                            help="Dimensionality of word embeddings (make sure that it's the same as in file from "
                                 "--embedding")
-    argparser.add_argument('--dim_y',
-                           type=int,
-                           default=200)
     argparser.add_argument('--dim_z',
                            type=int,
                            default=500,

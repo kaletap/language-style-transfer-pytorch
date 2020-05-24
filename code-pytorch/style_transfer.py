@@ -34,6 +34,10 @@ if __name__ == '__main__':
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     print("Using device", device)
 
-    encoder = Encoder(args.dim_emb, args.dim_z)
-    generator = Generator(args.dim_emb, args.dim_z)
-    discriminator = Discriminator(hidden_dim=args.dim_y)
+    encoder1 = Encoder(args.dim_emb, args.dim_z)
+    generator1 = Generator(args.dim_emb, args.dim_z)
+    discriminator1 = Discriminator(hidden_dim=args.dim_z)
+
+    encoder2 = Encoder(args.dim_emb, args.dim_z)
+    generator2 = Generator(args.dim_emb, args.dim_z)
+    discriminator2 = Discriminator(hidden_dim=args.dim_z)

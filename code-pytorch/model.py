@@ -70,7 +70,7 @@ class StyleTransferModel:
 
         self.dropout = nn.Dropout(p=0.5)
         self.learning_rate = 0.0001
-        self.rho = None  # TODO: check what it is
+        self.rho = None
         self.gamma = 0.001
 
     def forward(self, x):

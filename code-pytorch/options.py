@@ -21,10 +21,11 @@ def load_arguments():
                            type=str,
                            default='',
                            help="Path to save created dictionary or read from it if already exists")
-    argparser.add_argument('--embedding',
+    argparser.add_argument("--embedding",
                            type=str,
-                           default='',
+                           default="",
                            help="Path to file with embeddings")
+
     argparser.add_argument('--dim_emb',
                            type=int,
                            default=100,
@@ -38,9 +39,25 @@ def load_arguments():
     argparser.add_argument("-bs", "--batch_size",
                            type=int,
                            default=16)
+    argparser.add_argument("-lr", "--learning_rate",
+                           type=float,
+                           default=0.0005)
+    argparser.add_argument('--gamma_init',  # softmax(logit / gamma)
+                           type=float,
+                           default=0.1,
+                           help="Temperature parameter used for softmax when feeding words into recurrent generator")
+    argparser.add_argument('--max_epochs',
+                           type=int,
+                           default=20,
+                           help="Maximum number of epochs to run")
     argparser.add_argument('--max_train_size',
                            type=int,
                            default=-1)
+    argparser.add_argument('--max_seq_length',
+                           type=int,
+                           default=20,
+                           help="Maximum sequence length. Sentence will be cut if too long or padded (for "
+                                "convolutional discriminator classification) if too short")
 
     args = argparser.parse_args()
     return args

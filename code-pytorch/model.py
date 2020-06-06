@@ -25,15 +25,15 @@ class Generator(nn.Module):
         :param z: latent content representation
         :return: transferred hidden states sequence
         """
-        hs, _ = self.decode(x, z)
-        return hs
+        hs, last_h = self.decode(x, z)
+        return hs, last_h
 
 
 class Discriminator(nn.Module):
-    def __init__(self, hidden_dim, kernel_size):
+    def __init__(self, hidden_dim, kernel_size=3):
         super().__init__()
         self.out_channels = 128
-        assert kernel_size % 2 == 0
+        assert kernel_size % 2 == 1
         padding = (kernel_size - 1) / 2
         self.conv = nn.Sequential(
             nn.Conv2d(
